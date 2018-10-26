@@ -44,6 +44,11 @@ void setup() {
     Particle.function("led",ledToggle);
     // This is saying that when we ask the cloud for the function "led", it will employ the function ledToggle() from this app.
 
+    // bool success;
+    // success = Particle.publish("light_level");
+    // if (!success) {
+    // // get here if event publish did not work
+    // }
 }
 
 
@@ -72,7 +77,7 @@ void loop() {
 	} else if (analogvalue >= maxim) {
 		setpoint = 0;
 	}
-    
+
 	pinMode(pwm, OUTPUT);
 	// Check the setpoint vs the brightness
 	if (brightness < setpoint && brightness < 253) {
@@ -83,20 +88,10 @@ void loop() {
 		analogWrite(pwm, brightness);
 	}
 	
-
-
-	
-	// pinMode(pwm, OUTPUT);
-
-    // // Write brightness to the pwm pin
-	// analogWrite(pwm, brightness);
-	// brightness = brightness + fadeamount;
-
-	// if (brightness == 0 || brightness == 255) {
-	// 	fadeamount = -fadeamount;
-	// }
-
-
+    // Publish light level event (change threshold to something lower if you want)
+    if (analogvalue < 200) {
+        Particle.publish("light_level");
+    }
 }
 
 
