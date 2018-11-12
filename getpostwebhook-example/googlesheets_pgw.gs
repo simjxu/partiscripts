@@ -35,8 +35,8 @@ function PostRequest() {
     PropertiesService.getScriptProperties().getProperty('SHEET_NAME'));
   
   // API url goes like this:
-  // https://api.particle.io/v1/devices/54002d000751353530373132/
-  // led?args=on&access_token=39c7655424cc7f16ac8363b2c8913d3cccea141d
+  // https://api.particle.io/v1/devices/<DEVICEID>/
+  // led?args=on&access_token=<ACCESSTOKEN>
   var device_id = PropertiesService.getScriptProperties().getProperty('PARTICLE_DEVICE_ID');
   var access_token = PropertiesService.getScriptProperties().getProperty('PARTICLE_ACCESS_TOKEN');
   var function_name = sheet.getRange("B4").getValue();
