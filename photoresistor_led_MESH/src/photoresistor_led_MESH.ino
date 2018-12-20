@@ -1,5 +1,6 @@
-PRODUCT_ID(8184);
-PRODUCT_VERSION(1);
+// PRODUCT_ID(8184);
+// PRODUCT_VERSION(1);
+
 // -----------------------------------------
 // Function and Variable with Photoresistors
 // -----------------------------------------
@@ -34,9 +35,13 @@ double minim = 40.0;
 double maxim = 300.0;
 double fadeamount = 1.0;
 double brightness = 0.0;
-char *sheet_ID = "AKfycbz0kA3NI_hLh6EQaZAvj1JWtHi1SVW6NipOYLqwpTimFEcBh7k";
 
-// Next we go into the setup function.
+void myHandler(const char *event, const char *data) {
+  Serial.print(event);
+  Serial.print(", data: ");
+  Serial.println(data);
+  analogWrite(pwm, brightness);
+}
 
 void setup() {
 
@@ -71,15 +76,8 @@ void setup() {
 	// This is saying that when we ask the cloud for the function "led", it will employ 
 	//the function ledToggle() from this app.
 
-	// This variable stores the name of the "organization_id", in this case the spreadsheet app URL
-	Particle.variable("sheet_ID", sheet_ID);
-
-	// bool success;
-	// success = Particle.publish("light_level");
-	// if (!success) {
-	// // get here if event publish did not work
-	// }
-
+	// Subscribe to the light_level and point to Handler
+  Mesh.subscribe("light_level", myHandler);
 }
 
 
@@ -88,9 +86,6 @@ void setup() {
 void loop() {
 
 	// check to see what the value of the photoresistor is and store it in the int variable analogvalue
-	// To get the value of this variable, you will have to run
-	// Ou need to change device ID, but access token is same for your account
-	// curl https://api.particle.io/v1/devices/5c0032001951353338363036/analogvalue?access_token=39c7655424cc7f16ac8363b2c8913d3cccea141d
 	analogvalue = analogRead(photoresistor);
 	delay(5);
 
@@ -131,14 +126,10 @@ void loop() {
 		brightness = brightness;
 	}
 	
-	// Publish light level event, which connects to slack webhook 
-	// (change threshold to something lower if you want)
-	if (analogvalue < 50) {
-	    Particle.publish("low_light", String::format("{\"sheet_ID\":\"%s\"}", sheet_ID), NO_ACK);
-	}
+  Mesh.publish("light_level", "test");
 
-	// Make sure it doesn't publish too much
-	delay(2000);
+	// // Make sure it doesn't publish too much
+	// delay(2000);
 }
 
 

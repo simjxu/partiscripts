@@ -65,11 +65,6 @@ void setup() {
 	// This is saying that when we ask the cloud for the function "led", it will employ 
 	//the function ledToggle() from this app.
 
-	// bool success;
-	// success = Particle.publish("light_level");
-	// if (!success) {
-	// // get here if event publish did not work
-	// }
 
 }
 
@@ -119,6 +114,9 @@ void loop() {
 	if (analogvalue < 50) {
 	    Particle.publish("low_light", String(analogvalue), NO_ACK);
 	}
+
+	// Deep sleep
+	System.sleep(SLEEP_MODE_DEEP, 30);
 
 	// Make sure it doesn't publish too much
 	delay(2000);
