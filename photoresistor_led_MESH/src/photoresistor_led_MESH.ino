@@ -31,8 +31,8 @@ int power = A5; // This is the other end of your photoresistor. The other side
 double analogvalue; // Here we are declaring the integer variable analogvalue, 
 										// which we will use later to store the value of the photoresistor.
 double setpoint;
-double minim = 120.0;
-double maxim = 500.0;
+double minim = 40.0;
+double maxim = 300.0;
 double fadeamount = 1.0;
 double brightness = 0.0;
 
@@ -40,7 +40,7 @@ void myHandler(const char *event, const char *data) {
   Serial.print(event);
   Serial.print(", data: ");
   Serial.println(data);
-  analogWrite(pwm, brightness);
+  analogWrite(pwm, 250);
 }
 
 void setup() {
@@ -50,9 +50,9 @@ void setup() {
 	pinMode(led,OUTPUT); // Our LED pin is output (lighting up the LED)
 	pinMode(boardled,OUTPUT);		// This is the onboard led
 	pinMode(photoresistor,INPUT);  // Our photoresistor pin is input 
-																	// (reading the photoresistor)
+																 // (reading the photoresistor)
 	pinMode(power,OUTPUT); // The pin powering the photoresistor is output 
-													// (sending out consistent power)
+												 // (sending out consistent power)
 	pinMode(pwm, OUTPUT); // Pin for the pwm output
 
 	// Next, write one pin of the photoresistor to be the maximum possible, so that 
@@ -76,8 +76,8 @@ void setup() {
 	// This is saying that when we ask the cloud for the function "led", it will employ 
 	//the function ledToggle() from this app.
 
-// 	// Subscribe to the light_level and point to Handler
-//     Mesh.subscribe("light_level", myHandler);
+	// Subscribe to the light_level and point to Handler
+    Mesh.subscribe("light_level", myHandler);
 }
 
 
@@ -126,7 +126,7 @@ void loop() {
 		brightness = brightness;
 	}
 	
-	Mesh.publish("light_level", "test");
+//   Mesh.publish("light_level", "test");
 
 	// // Make sure it doesn't publish too much
 	// delay(2000);
