@@ -46,10 +46,13 @@ double brightness = 0.0;
 void myHandler(const char *event, const char *data) {
   String incoming_data = data;
   int setpoint = incoming_data.toInt();
+	brightness = setpoint;
   // Serial.print(event);
   // Serial.print(", data: ");
   // Serial.println(data);
-  analogWrite(pwm, setpoint);
+
+
+  // analogWrite(pwm, setpoint);
   Serial.print(setpoint);
   Particle.publish("change_brightness", "testing");
 }
@@ -95,33 +98,18 @@ void setup() {
 // Next is the loop function...
 
 void loop() {
-
-	// check to see what the value of the photoresistor is and store it in the int variable analogvalue
-	analogvalue = analogRead(photoresistor);
 	delay(5);
 
-	// // min is 40, max is 340
-	// if (analogvalue > minim && analogvalue < maxim) {
-	// 		setpoint = 255-(analogvalue-minim)/300*255;
-	// } else if (analogvalue <= minim) {
-	// setpoint = 254;
-	// } else if (analogvalue >= maxim) {
-	// 	setpoint = 0;
-	// } else {
-	// 	setpoint = 0;
-	// }
-	// pinMode(pwm, OUTPUT);
-
-	// // Check the setpoint vs the brightness
-	// if (brightness < setpoint && brightness < 252) {
-	// 	brightness = brightness + fadeamount;
-	// 	analogWrite(pwm, brightness);
-	// } else if (brightness > setpoint && brightness > 1.3) {
-	// 	brightness = brightness - fadeamount;
-	// 	analogWrite(pwm, brightness);
-	// } else {
-	// 	brightness = brightness;
-	// }
+	// Check the setpoint vs the brightness
+	if (brightness < setpoint && brightness < 252) {
+		brightness = brightness + fadeamount;
+		analogWrite(pwm, brightness);
+	} else if (brightness > setpoint && brightness > 1.3) {
+		brightness = brightness - fadeamount;
+		analogWrite(pwm, brightness);
+	} else {
+		brightness = brightness;
+	}
 	
 }
 

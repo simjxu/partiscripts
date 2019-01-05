@@ -9,7 +9,6 @@ In this example, we're going to register a Particle.variable() with
  the cloud so that we can read brightness levels from the photoresistor.
 We'll also register a Particle.function so that we can turn the LED on 
 and off remotely.
-
 We're going to start by declaring which pins everything is plugged into.
 */
 int led = D6; // This is where your LED is plugged in. 
@@ -44,7 +43,7 @@ void myHandler(const char *event, const char *data) {
   // Serial.println(data);
   analogWrite(pwm, setpoint);
   Serial.print(setpoint);
-  Particle.publish("change_brightness", "testing");
+  // Particle.publish("change_brightness", "testing");
 }
 
 void setup() {
@@ -81,7 +80,7 @@ void setup() {
 	//the function ledToggle() from this app.
 
 	// Subscribe to the light_level and point to Handler
-  Mesh.subscribe("change_brightness", myHandler);
+  Mesh.subscribe("low_light", myHandler);
 }
 
 

@@ -9,7 +9,6 @@ In this example, we're going to register a Particle.variable() with
  the cloud so that we can read brightness levels from the photoresistor.
 We'll also register a Particle.function so that we can turn the LED on 
 and off remotely.
-
 We're going to start by declaring which pins everything is plugged into.
 */
 int led = D6; // This is where your LED is plugged in. 
@@ -126,9 +125,9 @@ void loop() {
 		brightness = brightness;
 	}
 
-  if (analogvalue < 50) {
-    Mesh.publish("low_light", String(setpoint));
-  }
+
+	Mesh.publish("low_light", String(setpoint));
+
 	
 //   Mesh.publish("light_level", "test");
 
