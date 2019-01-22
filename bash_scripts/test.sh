@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# You hhave to do chmod u+x test.sh in order to have it work
+# You have to do chmod u+x test.sh in order to have it work
 # declare an array variable
 declare -a arr=(
   1c002f000d50483553353920
