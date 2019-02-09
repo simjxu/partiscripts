@@ -1,0 +1,16 @@
+{
+    "settings": {
+        "extensions.ignoreRecommendations": true,
+        "C_Cpp.default.configurationProvider": "particle.particle-vscode-core",
+        "files.associations": {
+            "*.ino": "cpp"
+        },
+        "particle.firmwareVersion": "0.8.0-rc.25",
+        "particle.targetPlatform": "boron"
+    },
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
+}

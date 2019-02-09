@@ -44,7 +44,7 @@ headers = {
     'Connection': 'keep-alive',
 }
 
-filetext = open("serial_num.txt")
+filetext = open("device_ids.txt")
 device_ids = filetext.read().split("\n")
 num_ids = len(device_ids)
 for i in range(num_ids):

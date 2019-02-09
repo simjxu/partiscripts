@@ -59,7 +59,8 @@ declare -a arr=(
 for i in "${arr[@]}"
 do
    echo "$i"
-   echo curl "https://api.particle.io/v1/device_id/DYNSAB852YAK8G5?access_token=39c7655424cc7f16ac8363b2c8913d3cccea141d"
+   resp=$(curl -s "https://api.particle.io/v1/serial_numbers/HA50AB904PM358E?access_token=39c7655424cc7f16ac8363b2c8913d3cccea141d")
+   echo "$resp"
    # or do whatever with individual element of the array
 done
 

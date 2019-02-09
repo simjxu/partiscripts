@@ -1,4 +1,4 @@
-/Users/simonxu/Projects/Github-simjxu/partiscripts/particle_led_ARG/target//obj/../../../modules/shared/nRF52840/src/user-part/newlib_stubs.o: \
+/Users/simonxu/Projects/Github-simjxu/partiscripts/BOR_rssitest/target//obj/../../../modules/shared/nRF52840/src/user-part/newlib_stubs.o: \
  ../../../modules/shared/nRF52840/src/user-part/newlib_stubs.cpp \
  /Users/simonxu/.particle/toolchains/gcc-arm/5.3.1/arm-none-eabi/include/sys/types.h \
  /Users/simonxu/.particle/toolchains/gcc-arm/5.3.1/arm-none-eabi/include/_ansi.h \
