@@ -12,6 +12,9 @@
     "folders": [
         {
             "path": "."
+        },
+        {
+            "path": "/Users/simonxu/Projects/Github-simjxu/partiscripts/particle_led_XEN"
         }
     ]
 }

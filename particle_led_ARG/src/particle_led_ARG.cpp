@@ -11,14 +11,13 @@ In this example, we're going to register a Particle.variable() with
  the cloud so that we can read brightness levels from the photoresistor.
 We'll also register a Particle.function so that we can turn the LED on 
 and off remotely.
-
 We're going to start by declaring which pins everything is plugged into.
 */
 void myHandler(const char *event, const char *data);
 void setup();
 void loop();
 int ledToggle(String command);
-#line 15 "/Users/simonxu/Projects/Github-simjxu/partiscripts/particle_led_ARG/src/particle_led_ARG.ino"
+#line 14 "/Users/simonxu/Projects/Github-simjxu/partiscripts/particle_led_ARG/src/particle_led_ARG.ino"
 int led = D6; // This is where your LED is plugged in. 
 							//The other side goes to a resistor connected to GND.
 int pwm = A4;
@@ -107,14 +106,11 @@ void loop() {
 	if (analogvalue > minim && analogvalue < maxim) {
 			setpoint = 255-(analogvalue-minim)/300*255;
 	} else if (analogvalue <= minim) {
-		setpoint = 254;
-		// Mesh.publish("low_light", String(setpoint));
+	setpoint = 254;
 	} else if (analogvalue >= maxim) {
 		setpoint = 0;
-		// Mesh.publish("low_light", String(setpoint));
 	} else {
 		setpoint = 0;
-		// Mesh.publish("low_light", String(setpoint));
 	}
 	pinMode(pwm, OUTPUT);
 
@@ -136,12 +132,11 @@ void loop() {
 		brightness = brightness;
 	}
 
-	
+
+	Mesh.publish("low_light", String(setpoint));
 
 	
-	if (analogvalue < 50) {
-    Mesh.publish("low_light", String(setpoint));
-  }
+//   Mesh.publish("light_level", "test");
 
 	// // Make sure it doesn't publish too much
 	// delay(2000);
