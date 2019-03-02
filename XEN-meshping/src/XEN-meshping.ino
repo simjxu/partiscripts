@@ -5,12 +5,14 @@
 // Function and Variable with Photoresistors
 // -----------------------------------------
 
-int boardled = D7;
-bool onoff = true;
+int digitalD4 = D4;
+int digitalD7 = D7;
+String onoff;
 
 
 void setup() {
-  pinMode(boardled,OUTPUT);		// This is the onboard led
+  pinMode(digitalD4,OUTPUT);		
+  pinMode(digitalD7,OUTPUT);		// This is the onboard led
   // Make ability to communicate with LED
   Particle.function("led",ledToggle);
 }
@@ -21,19 +23,22 @@ void setup() {
 void loop() {
 
 	// If global variable shows on, switch to off, and vice versa
-  if (onoff == true) {
-    onoff = false;
+  if (onoff == "D4on") {
+    onoff = "D4off";
   }
   else {
-    onoff = true;
+    onoff = "D4on";
   }
 
   Serial.print(onoff);
 
   Mesh.publish("bor_ping", String(onoff));
+  digitalWrite(digitalD7, HIGH);
+  delay(1000);
+  digitalWrite(digitalD7, LOW);
 
-  // Delay for 2 seconds
-	delay(2000);
+  // Delay for 1 seconds
+	delay(1000);
 }
 
 // Finally, we will write out our ledToggle function, which is referenced by the Particle.function() called "led"
@@ -41,11 +46,11 @@ void loop() {
 int ledToggle(String command) {
 
 	if (command=="on") {
-		digitalWrite(boardled,HIGH);
+		digitalWrite(digitalD4,HIGH);
 		return 1;
 	}
 	else if (command=="off") {
-		digitalWrite(boardled,LOW);
+		digitalWrite(digitalD4,LOW);
 		return 0;
 	}
 	else {
