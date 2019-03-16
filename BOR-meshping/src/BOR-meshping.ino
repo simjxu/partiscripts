@@ -1,15 +1,17 @@
 // PRODUCT_ID(8184);
 // PRODUCT_VERSION(1);
 
-// -----------------------------------------
-// Function and Variable with Photoresistors
-// -----------------------------------------
 
 int pwm = A4;
 int digitalD7 = D7;
 int digitalD6 = D6;
 int digitalD5 = D5;
 int digitalD4 = D4;
+bool flagD7 = false;
+bool flagD6 = false;
+bool flagD5 = false;
+bool flagD4 = false;
+String deviceID = "e00fce6817ec9245b5a103d9";
 
 
 double minim = 40.0;
@@ -23,38 +25,33 @@ void myHandler(const char *event, const char *data) {
   Serial.print(", data: ");
   Serial.println(data);
 
-  if (incoming_data == "D7on"){
-    digitalWrite(digitalD7, HIGH);
-    Serial.print("HIGH");
+  if (incoming_data == deviceID){
+    if(flagD7==false){
+      digitalWrite(digitalD7, HIGH);
+      Serial.print("HIGH");
+      Mesh.publish("pong"+deviceID);
+      flagD7 = true;
+    } else {
+      digitalWrite(digitalD7, LOW);
+      Serial.print("LOW");
+      Mesh.publish("pong"+deviceID);
+      flagD7 = false;
+    }
   }
-  else if (incoming_data == "D7off"){
-    digitalWrite(digitalD7, LOW);
-    Serial.print("LOW");
-  }
-  else if (incoming_data == "D6on"){
-    digitalWrite(digitalD6, HIGH);
-    Serial.print("HIGH");
-  }
-  else if (incoming_data == "D6off"){
-    digitalWrite(digitalD6, LOW);
-    Serial.print("LOW");
-  }
-  else if (incoming_data == "D5on"){
-    digitalWrite(digitalD5, HIGH);
-    Serial.print("HIGH");
-  }
-  else if (incoming_data == "D5off"){
-    digitalWrite(digitalD5, LOW);
-    Serial.print("LOW");
-  }
-  else if (incoming_data == "D4on"){
-    digitalWrite(digitalD4, HIGH);
-    Serial.print("HIGH");
-  }
-  else if (incoming_data == "D4off"){
-    digitalWrite(digitalD4, LOW);
-    Serial.print("LOW");
-  }
+
+  // else if (incoming_data == "e00fce68791f786043777851"){
+  //   if(flagD6==false){
+  //     digitalWrite(digitalD6, HIGH);
+  //     Serial.print("HIGH");
+  //     Mesh.publish("ponge00fce68791f786043777851");
+  //     flagD6 = true;
+  //   } else {
+  //     digitalWrite(digitalD6, LOW);
+  //     Serial.print("LOW");
+  //     Mesh.publish("ponge00fce68791f786043777851");
+  //     flagD6 = false;
+  //   }
+  // }
 }
 
 void setup() {

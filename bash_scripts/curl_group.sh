@@ -80,3 +80,8 @@ do
 done
 
 # You can access them using echo "${arr[0]}", "${arr[1]}" also
+
+
+
+# Example of looping:
+# for ((i=1;i<5;i+=1)); do echo "${i}" ; done
