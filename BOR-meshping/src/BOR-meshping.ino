@@ -11,7 +11,8 @@ bool flagD7 = false;
 bool flagD6 = false;
 bool flagD5 = false;
 bool flagD4 = false;
-String deviceID = "e00fce6817ec9245b5a103d9";
+String deviceID1 = "e00fce6838fbd1dfbb3147a6";
+// String deviceID2 = "e00fce68fc799f116d8ffcab";
 
 
 double minim = 40.0;
@@ -25,32 +26,31 @@ void myHandler(const char *event, const char *data) {
   Serial.print(", data: ");
   Serial.println(data);
 
-  if (incoming_data == deviceID){
+  if (incoming_data == deviceID1){
     if(flagD7==false){
       digitalWrite(digitalD7, HIGH);
-      Serial.print("HIGH");
-      Mesh.publish("pong"+deviceID);
+      Serial.print("HIGH1");
       flagD7 = true;
     } else {
       digitalWrite(digitalD7, LOW);
-      Serial.print("LOW");
-      Mesh.publish("pong"+deviceID);
+      Serial.print("LOW1");
       flagD7 = false;
     }
+    Mesh.publish("pong"+deviceID1);
   }
 
-  // else if (incoming_data == "e00fce68791f786043777851"){
+  // else if (incoming_data == deviceID2){
   //   if(flagD6==false){
   //     digitalWrite(digitalD6, HIGH);
-  //     Serial.print("HIGH");
-  //     Mesh.publish("ponge00fce68791f786043777851");
+  //     Serial.print("HIGH2");
   //     flagD6 = true;
   //   } else {
   //     digitalWrite(digitalD6, LOW);
-  //     Serial.print("LOW");
-  //     Mesh.publish("ponge00fce68791f786043777851");
+  //     Serial.print("LOW2");
+      
   //     flagD6 = false;
   //   }
+  //   Mesh.publish("pong"+deviceID2);
   // }
 }
 
@@ -77,7 +77,6 @@ void setup() {
 void loop() {
 
   delay(5);
-
 
 }
 

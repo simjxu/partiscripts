@@ -1,24 +1,24 @@
 #!/bin/bash
-
 # You have to do chmod u+x test.sh in order to have it work
+
+# This script takes a list of serial numbers, finds the device ID, and then changes the name of device to the serial number
 # declare an array variable
 declare -a sernum=(
-  HA50AB904PM358E
-  HA50AB904UPM6WE
+  PH-170413-HZ74-0
+  BTTN-161011-57BP-0
 )
 
-declare -a devid=(
-  HA50AB904PM358E
-  HA50AB904UPM6WE
-)
 
 ## now loop through the above array
-for i in "${arr[@]}"
+for i in "${sernum[@]}"
 do
-  #  echo "$i"
-   resp=$(curl -s "https://api.particle.io/v1/serial_numbers/$i?access_token=39c7655424cc7f16ac8363b2c8913d3cccea141d" | jq '.device_id')
+  # #---jq looks inside json to grab the right part. tr trims the quotes
+   devid=$(curl -s "https://api.particle.io/v1/serial_numbers/$i?access_token=0e0fbf7cf17091457fde05850708ec057663c9fc" | jq '.device_id' | tr -d \")
+  #  echo $devid
+  #  echo $i
+   resp=$(curl -X PUT https://api.particle.io/v1/products/8184/devices/$devid -d name=$i -d access_token=0e0fbf7cf17091457fde05850708ec057663c9fc)
+  #  resp=$(curl -X PUT https://api.particle.io/v1/products/8184/devices/3a003c001947333438373338 -d name=BTTN-161011-57BP-0 -d access_token=70ef2af33fa689cf31ea9e2724a66ed953c3779f)
    echo "$resp"
-   # or do whatever with individual element of the array
 done
 
-# You can access them using echo "${arr[0]}", "${arr[1]}" also
+# #---You can access them using echo "${arr[0]}", "${arr[1]}" also
