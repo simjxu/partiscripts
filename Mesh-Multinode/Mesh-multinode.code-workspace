@@ -1,0 +1,45 @@
+{
+	"folders": [
+		{
+			"path": "Multinode-BOR"
+		},
+		{
+			"path": "Multinode-XEN"
+		}
+	],
+	"settings": {
+		"extensions.ignoreRecommendations": true,
+		"files.associations": {
+			"*.ino": "cpp",
+			"__bit_reference": "cpp",
+			"__config": "cpp",
+			"__debug": "cpp",
+			"__functional_base": "cpp",
+			"__nullptr": "cpp",
+			"__split_buffer": "cpp",
+			"__tuple": "cpp",
+			"atomic": "cpp",
+			"cstddef": "cpp",
+			"cstdint": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"cstring": "cpp",
+			"deque": "cpp",
+			"exception": "cpp",
+			"functional": "cpp",
+			"initializer_list": "cpp",
+			"iosfwd": "cpp",
+			"iterator": "cpp",
+			"limits": "cpp",
+			"memory": "cpp",
+			"queue": "cpp",
+			"stdexcept": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"typeinfo": "cpp",
+			"utility": "cpp",
+			"vector": "cpp",
+			"algorithm": "cpp"
+		}
+	}
+}
