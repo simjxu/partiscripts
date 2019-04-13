@@ -5,6 +5,7 @@ std::queue<String> device_queue;     // queue of device ids for
 String devid = "";
 String xenons[] = {"","","","","","","","","","","","","","","","","","","",""};
 int meshcount = 0;
+int restart_time = 0;
 
 void pingHandler(const char *event, const char *data) {
   String incoming_data = data;
@@ -20,11 +21,12 @@ void setup() {
 
 	// Subscribe to the xen_ping and point to Handler
   Mesh.subscribe("bor_ping", pingHandler); 
+  restart_time = millis();
 } 
 
 void loop() {
   bool isUnique = true;
-  delay(10000);
+  // delay(10000);
   while (!device_queue.empty()) { 
     Mesh.publish("bor_pong:"+device_queue.front());
     
@@ -46,15 +48,20 @@ void loop() {
     device_queue.pop(); 
     isUnique = true;      // reset
   } 
-  Serial.println("Count: " + String(meshcount));
-  for(int i=0;i<meshcount;i++){
-    Serial.println(xenons[i]);
-    xenons[i] = "";
-  }
+  
 
   // Reset
-  Mesh.publish("wakeup_xenon", "nothing");
-  meshcount = 0;
+  if(millis()-restart_time >= 10000){
+    Serial.println("Count: " + String(meshcount));
+    for(int i=0;i<meshcount;i++){
+      Serial.println(xenons[i]);
+      xenons[i] = "";
+    }
+    Mesh.publish("wakeup_xenon", "nothing");
+    meshcount = 0;
+    restart_time = millis();
+  }
+  
 }
 
 int xenon_connect(String command) {
