@@ -11,7 +11,7 @@ String datastring = "123456789012345678901234567890";
 
 void wakeHandler(const char *event, const char *data) {
   Serial.println("wakeupcalled");
-  Mesh.publish("bor_ping", System.deviceID() + " : " + datastring);
+  Mesh.publish("bor_ping", System.deviceID() + " : " + datastring + " : " + String(attempts));
   ping_attempt = true;
 }
 
@@ -47,12 +47,12 @@ void setup() {
 void loop() {
   // Serial.println("Pingattempt:"+String(ping_attempt));
   // Serial.println("bor_resp:"+String(bor_resp));
-  // Serial.println("attempts:"+String(attempts));
+  Serial.println("attempts:"+String(attempts));
   while(ping_attempt==true && bor_resp==false && attempts<5) {
     delay(2000);
     if(bor_resp==false){
       Serial.println("retrying ping...");
-      Mesh.publish("bor_ping", System.deviceID() + " : " + datastring);
+      Mesh.publish("bor_ping", System.deviceID() + " : " + datastring + " : " + String(attempts));
       attempts += 1;
     }
   }

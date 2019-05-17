@@ -5,6 +5,15 @@
 		},
 		{
 			"path": "Multinode-XEN"
+		},
+		{
+			"path": "MultinodeDS-XEN1"
+		},
+		{
+			"path": "MultinodeDS-XEN2"
+		},
+		{
+			"path": "MultinodeDS-BOR"
 		}
 	],
 	"settings": {
