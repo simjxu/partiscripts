@@ -1,58 +1,46 @@
-// #include "Particle.h"
-// #include "system_threading.h"
 
-// // Argon Master: e00fce680e945e12aabc7676
-// // Xenon Slave: e00fce68fc799f116d8ffcab
+// SPI Example --------------------------------------
 
-// SYSTEM_MODE(SEMI_AUTOMATIC);
-// uint8_t rx_buffer[64], tx_buffer[64];
-
-// void setup() {
-//   pinMode(D7, OUTPUT);
-//   pinMode(A5, OUTPUT);
-//   Particle.connect();
-
-//   // SPI setup
-
-//   for (int i = 0; i < sizeof(tx_buffer); i++){
-//     tx_buffer[i] = (uint8_t)i;
-//   }
-
-//   SPI.begin(SPI_MODE_MASTER, A5);   // set the Argon as master for SPI 
-//   SPI.setClockSpeed(8, MHZ);
-//   SPI.setBitOrder(MSBFIRST);
-//   SPI.setDataMode(SPI_MODE3);
-// }
-
-// void loop() {
-//   uint8_t value = 0x5f; 
-//   digitalWrite(D7, HIGH);
-//   digitalWrite(A5, HIGH);
-//   delay(1000);
-//   SPI.transfer(value); //  A5 SS
-//   delay(10);
-//   digitalWrite(A5, LOW);
-//   delay(10);
-//   digitalWrite(D7, LOW);
-//   delay(2000);
-// }
-
-
+SYSTEM_THREAD(ENABLED);
 SYSTEM_MODE(SEMI_AUTOMATIC);
+
+// Create buffers
+uint8_t rx_buffer[64], tx_buffer[64];
 
 void setup() {
   Particle.connect();
-  SPI1.setClockSpeed(8, MHZ);
-  SPI1.begin(SPI_MODE_MASTER);
+  pinMode(D7, OUTPUT);
+
+  // SPI Example --------------------------------------
+  SPI1.setDataMode(SPI_MODE3); // Mode 3 means pull low to select
+  SPI1.setClockSpeed(4, MHZ);
+  SPI1.begin(SPI_MODE_MASTER);    
+  // SPI Example --------------------------------------
+
+  // ---------------------------------------I2C Example
+
+
+  // tx_buffer contains all the data that you want to transfer, currently setting some random data to it
+  tx_buffer[0] = 0x02;
+  tx_buffer[1] = 0x0A;
 }
 
 void loop() {
+  digitalWrite(D7, HIGH); // Indicate when data is being sent via LED
+  digitalWrite(D5, LOW);  // pull SS pin low to begin transfer
+  SPI1.transfer(tx_buffer, rx_buffer, sizeof(tx_buffer), NULL);
+  digitalWrite(D5, HIGH); // pull SS pin high to deselect slave
+  delay(500);
+  digitalWrite(D7, LOW); // Indicate when data has stopped being sent
+  delay(2000);
+
+  // Another example transfer: single byte
+  digitalWrite(D7, HIGH); // Indicate when data is being sent
   digitalWrite(D5, LOW);
-  SPI1.transfer(0x01);
+  SPI1.transfer(0x0D);
   digitalWrite(D5, HIGH);
-  delay(1000);
-  digitalWrite(D5, LOW);
-  SPI1.transfer(0x02);
-  digitalWrite(D5, HIGH);
-  delay(1000);
+  delay(500);
+  digitalWrite(D7, LOW); // Indicate when data has stopped being sent
+  delay(2000);
 }
+// SPI Example --------------------------------------
