@@ -1,0 +1,23 @@
+// #include "Particle.h"
+// #include "cellular_hal.h"
+SerialLogHandler logHandler(Serial, LOG_LEVEL_TRACE);
+SYSTEM_MODE(SEMI_AUTOMATIC);
+CellularSignal sig = Cellular.RSSI();
+String datastring = "";
+int counter = 0;
+
+// setup() runs once, when the device is first turned on.
+void setup() {
+  // Put initialization like pinMode and begin functions here.
+  Particle.connect();
+}
+
+// loop() runs over and over again, as quickly as it can execute.
+void loop() {
+  // The core of your code will likely live here.
+  sig = Cellular.RSSI();
+  datastring = String(sig.rssi)+","+String(sig.qual)+","+counter;
+  Particle.publish("test",datastring);
+  counter += 1;
+  delay(2000);
+}
