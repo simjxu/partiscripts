@@ -1,17 +1,37 @@
+#include "Particle.h"
 
+SerialLogHandler logHandler(115200, LOG_LEVEL_ALL);
 
-int count = 0;
-int digitalD7 = D7;
-void setup() {
-  pinMode(digitalD7,OUTPUT);		// This is the onboard led
+SYSTEM_THREAD(ENABLED);
+SYSTEM_MODE(SEMI_AUTOMATIC);
+
+void setup()
+{
+    Serial.begin(115200);
+    waitFor(Serial.isConnected, 10000);
+
+    SPI.setDataMode(SPI_MODE0);
+    SPI.setClockSpeed(100 * 1000);
+    SPI.begin();
+
+    delay(5000); // because ???
+
+    uint8_t buf[8]; // contents don't matter, garbage from the stack is OK!
+
+    SPI.transfer(buf, NULL, sizeof(buf), NULL);
+
+    Log.info("auto buf tx success!");
+
+    delay(1000);
+
+    // following line does not compile
+    // SPI.transfer("ABC", NULL, sizeof("ABC"), NULL);
+    // Hard faults on Gen 3
+    SPI.transfer((uint8_t*) "ABC", NULL, sizeof("ABC"), NULL);
+
+    Log.info("const buf tx success!");
 }
 
-// loop() runs over and over again, as quickly as it can execute.
-void loop() {
-  // The core of your code will likely live here.
-  Particle.publish("ppinterval");
-  digitalWrite(digitalD7, HIGH);
-  delay(150000);
-  digitalWrite(digitalD7, LOW);
-  delay(150000);
+void loop()
+{
 }

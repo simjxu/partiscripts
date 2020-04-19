@@ -18,4 +18,3 @@ void loop() {
   Serial.println(Time.now());
   delay(599000);
 }
-

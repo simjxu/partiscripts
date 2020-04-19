@@ -1,66 +1,149 @@
-#include <queue>
-using namespace std;
+// #include "application.h"
+// #include "deviceid_hal.h"
 
-std::queue<String> device_queue;      // queue of device ids
-std::queue<String> data_queue;     // queue of attempts
-String devid = "";
-String xenons[] = {"","","","","","","","","","","","","","","","","","","",""};
-String attemptcnt[] = {"","","","","","","","","","","","","","","","","","","",""};
+// SerialLogHandler dbg(LOG_LEVEL_ALL);
+
+// SYSTEM_MODE(SEMI_AUTOMATIC);
+// SYSTEM_THREAD(ENABLED);
+
+// struct QueueData {
+//   char deviceId[HAL_DEVICE_ID_SIZE * 2 + 1];
+//   char data[255];
+// };
+
+// os_queue_t device_queue = nullptr;
+
+// int restart_time = 0;
+// int publish_flag = 0;
+// int current_count = 0; 
+// // Change this to equate to number of devices
+// int num_devices = 1;
+
+// void selectExternalMeshAntenna() {
+//   #if (PLATFORM_ID == PLATFORM_ARGON)
+//     digitalWrite(ANTSW1, 1);
+//     digitalWrite(ANTSW2, 0);
+//   #elif (PLATFORM_ID == PLATFORM_BORON)
+//     digitalWrite(ANTSW1, 0);
+//   #else
+//     digitalWrite(ANTSW1, 0);
+//     digitalWrite(ANTSW2, 1);
+//   #endif
+// }
+
+// STARTUP(selectExternalMeshAntenna);
+
+// void pingHandler(const char *event, const char *data) {
+//   Log.trace("ping received");
+//   QueueData d = {};
+//   memcpy(d.deviceId, data, HAL_DEVICE_ID_SIZE * 2);
+//   if (data) {
+//     Log.trace(data);
+//     memcpy(d.data, data, std::max(strlen(data), sizeof(d.data)));
+//   }
+//   os_queue_put(device_queue, &d, CONCURRENT_WAIT_FOREVER, nullptr);
+// }
+
+// void resultsHandler(const char *event, const char *data) {
+//   Log.trace("results received");
+// }
+
+// void setup() {
+//   os_queue_create(&device_queue, sizeof(QueueData), 10, nullptr);
+
+//   waitUntil(Serial.isConnected);
+  
+//   Log.trace("Connecting to mesh");
+//   Mesh.on();
+//   Mesh.connect();
+//   Cellular.connect();
+//   Particle.connect();
+//   // Subscribe to the xen_ping and point to Handler
+//   Mesh.subscribe("bor_ping", pingHandler); 
+//   Mesh.subscribe("send_results", resultsHandler);
+//   restart_time = millis();
+// }
+
+// void loop() {
+//   QueueData data = {};
+//   while (!os_queue_take(device_queue, &data, 0, nullptr)) { 
+//     Log.trace("Sending response pong to %s", data.deviceId);
+//     Mesh.publish("bor_pong", String(data.data));
+//     Particle.publish("xenon-pub", data.data);
+//   }
+
+//   if(millis()-restart_time >= 600000){
+//     Particle.publish("bor_online");
+//     restart_time = millis();
+//   }  
+// }
+
+
+
+#include "application.h"
+#include "deviceid_hal.h"
+
+SerialLogHandler dbg(LOG_LEVEL_NONE, { {"ot", LOG_LEVEL_ALL}, {"app", LOG_LEVEL_ALL} });
+
+SYSTEM_MODE(SEMI_AUTOMATIC);
+SYSTEM_THREAD(ENABLED);
+
+struct QueueData {
+  char deviceId[HAL_DEVICE_ID_SIZE * 2 + 1];
+  char data[255];
+};
+
+os_queue_t device_queue = nullptr;
+
 int restart_time = 0;
-
+int publish_flag = 0;
+int current_count = 0; 
 // Change this to equate to number of devices
 int num_devices = 1;
+int count = 0;
+
+void selectExternalMeshAntenna() {
+  #if (PLATFORM_ID == PLATFORM_ARGON)
+    digitalWrite(ANTSW1, 1);
+    digitalWrite(ANTSW2, 0);
+  #elif (PLATFORM_ID == PLATFORM_BORON)
+    digitalWrite(ANTSW1, 0);
+  #else
+    digitalWrite(ANTSW1, 0);
+    digitalWrite(ANTSW2, 1);
+  #endif
+}
+
+STARTUP(selectExternalMeshAntenna);
 
 void pingHandler(const char *event, const char *data) {
-  String incoming_data = data;
+  Log.trace("ping received");
+  count++;
+}
 
-  // Grab the device ID: first 24 characters of the string
-  devid = incoming_data.substring(0,24);
-  device_queue.push(devid);
-
-  data_queue.push(data);
+void resultsHandler(const char *event, const char *data) {
+  Log.trace("results received");
+  count = 0;
+  Log.trace(data);
 }
 
 void setup() {
-  // Function to get devices connected to cloud
-  Particle.function("xen_cnct",xenon_connect);
-  // Function to reset devices
-  Particle.function("xen_rst",xenon_reset);
+  os_queue_create(&device_queue, sizeof(QueueData), 10, nullptr);
 
-	// Subscribe to the xen_ping and point to Handler
+  waitUntil(Serial.isConnected);
+  
+  Log.trace("Connecting to mesh");
+  Mesh.on();
+  Mesh.connect();
+  Cellular.connect();
+  Particle.connect();
+  // Subscribe to the xen_ping and point to Handler
   Mesh.subscribe("bor_ping", pingHandler); 
+  Mesh.subscribe("send_results", resultsHandler);
   restart_time = millis();
-} 
+}
 
 void loop() {
-  while (!device_queue.empty()) { 
-    Mesh.publish("bor_pong:"+device_queue.front());
-    
-    // Publish to the cloud
-    Particle.publish("xenon-pub", data_queue.front());
-
-    device_queue.pop(); 
-    data_queue.pop();
-  } 
+    delay(10000);
+    Log.trace(String(count));
 }
-
-int xenon_connect(String command) {
-  if (command=="1") {
-    Mesh.publish("flash_update","");
-    return 1;
-  }
-  else {
-    return -1;
-  }
-}
-
-int xenon_reset(String command) {
-  if (command=="1") {
-    Mesh.publish("reset","");
-    return 1;
-  }
-  else {
-    return -1;
-  }
-}
-

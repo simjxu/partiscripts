@@ -11,6 +11,7 @@
 		"extensions.ignoreRecommendations": true,
 		"files.associations": {
 			"*.ino": "cpp"
-		}
+		},
+		"cortex-debug.openocdPath": "${command:particle.getDebuggerOpenocdPath}"
 	}
 }

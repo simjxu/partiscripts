@@ -12,7 +12,7 @@ declare -a arr=(
 for i in "${arr[@]}"
 do
   # echo "$i"
-  resp=$(curl -X PUT "https://api.particle.io/v1/products/8324/devices/$i/disconnect?access_token=70ef2af33fa689cf31ea9e2724a66ed953c3779f")
+  resp=$(curl -X PUT "https://api.particle.io/v1/products/438/devices/$i/disconnect?access_token=70ef2af33fa689cf31ea9e2724a66ed953c3779f")
   echo "$resp"
   # or do whatever with individual element of the array
 done
