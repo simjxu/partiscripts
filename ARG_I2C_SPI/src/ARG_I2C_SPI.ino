@@ -1,3 +1,8 @@
+// This example is working for an Argon master connected to a Xenon
+// slave. The 4 SPI1 pins are connected between the two devices
+// (D2, D3, D4, D5)
+// For I2C, the SCL and SDA lines are connected. 
+// Both devices share a common ground
 
 // SPI Example --------------------------------------
 
