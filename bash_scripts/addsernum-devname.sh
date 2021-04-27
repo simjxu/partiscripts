@@ -8,6 +8,7 @@ declare -a sernum=(
   BTTN-161011-57BP-0
 )
 
+declare -i prodid=8184
 
 ## now loop through the above array
 for i in "${sernum[@]}"
@@ -16,7 +17,7 @@ do
    devid=$(curl -s "https://api.particle.io/v1/serial_numbers/$i?access_token=0e0fbf7cf17091457fde05850708ec057663c9fc" | jq '.device_id' | tr -d \")
   #  echo $devid
   #  echo $i
-   resp=$(curl -X PUT https://api.particle.io/v1/products/8184/devices/$devid -d name=$i -d access_token=0e0fbf7cf17091457fde05850708ec057663c9fc)
+   resp=$(curl -X PUT https://api.particle.io/v1/products/$prodid/devices/$devid -d name=$i -d access_token=0e0fbf7cf17091457fde05850708ec057663c9fc)
   #  resp=$(curl -X PUT https://api.particle.io/v1/products/8184/devices/3a003c001947333438373338 -d name=BTTN-161011-57BP-0 -d access_token=70ef2af33fa689cf31ea9e2724a66ed953c3779f)
    echo "$resp"
 done

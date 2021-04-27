@@ -15,6 +15,8 @@ void onSend(uint8_t state) {
      globalState = 1;
    }
 }
+// SPI Example --------------------------------------
+
 
 void setup() {
 // SPI Example --------------------------------------
@@ -25,15 +27,22 @@ void setup() {
   SPI1.begin(SPI_MODE_SLAVE, D5);   // Slave device
 // SPI Example --------------------------------------
 
+// ---------------------------------------I2C Example
+  Wire.begin();   // Start I2C up
+// ---------------------------------------I2C Example
 
 }
 
 void loop() {
+// SPI Example --------------------------------------
   if (globalState == 1) {
     globalState = 0;
-    Serial.println("Receiving SPI...");
+    Serial.println("Waiting for SPI...");
     SPI1.transfer(tx_buffer, rx_buffer, sizeof(tx_buffer), NULL);
     Serial.println(rx_buffer[0]);   // Print out the values received
   }
-}
 // SPI Example --------------------------------------
+
+
+
+}

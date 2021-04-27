@@ -1,5 +1,5 @@
-#include "application.h"
-#line 1 "/Users/simonxu/Projects/Github-simjxu/partiscripts/particle_led_BOR/src/particle_led_BOR.ino"
+#include "Particle.h"
+
 // PRODUCT_ID(8184);
 // PRODUCT_VERSION(1);
 
@@ -27,7 +27,7 @@ int boardled = D7;
 int photoresistor = A0; // This is where your photoresistor is plugged in. 
 												// The other side goes to the "power" pin (below).
 
-int power = A5; // This is the other end of your photoresistor. The other side 
+int pwr = A5; // This is the other end of your photoresistor. The other side 
 // is plugged into the "photoresistor" pin (above).
 // The reason we have plugged one side into an analog pin instead of to 
 // "power" is because we want a very steady voltage to be sent to the photoresistor.
@@ -57,13 +57,13 @@ void setup() {
 	pinMode(boardled,OUTPUT);		// This is the onboard led
 	pinMode(photoresistor,INPUT);  // Our photoresistor pin is input 
 																 // (reading the photoresistor)
-	pinMode(power,OUTPUT); // The pin powering the photoresistor is output 
+	pinMode(pwr,OUTPUT); // The pin powering the photoresistor is output 
 												 // (sending out consistent power)
 	pinMode(pwm, OUTPUT); // Pin for the pwm output
 
 	// Next, write one pin of the photoresistor to be the maximum possible, so that 
 	// we can use this for power.
-	digitalWrite(power,HIGH);
+	digitalWrite(pwr,HIGH);
 
 	// We are going to declare a Particle.variable() here so that we can access 
 	// the value of the photoresistor from the cloud.
@@ -132,8 +132,6 @@ void loop() {
 		brightness = brightness;
 	}
 
-
-	Mesh.publish("low_light", String(setpoint));
 
 	
 //   Mesh.publish("light_level", "test");

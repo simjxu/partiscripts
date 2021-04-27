@@ -1,137 +1,77 @@
-// PRODUCT_ID(8184);
-// PRODUCT_VERSION(1);
+// 37.33773842860023, -122.01428063652223
+// 37.337772088687366, -122.00540290465861
+// Output ---> 90 degrees
 
-// -----------------------------------------
-// Function and Variable with Photoresistors
-// -----------------------------------------
-/*
-In this example, we're going to register a Particle.variable() with
- the cloud so that we can read brightness levels from the photoresistor.
-We'll also register a Particle.function so that we can turn the LED on 
-and off remotely.
-We're going to start by declaring which pins everything is plugged into.
-*/
-int led = D6; // This is where your LED is plugged in. 
-							//The other side goes to a resistor connected to GND.
-int pwm = A4;
+// 37.337652150532776, -122.01422938622564
+// 37.34138504412391, -122.01425213575031
+// Output ---> 360 degrees
 
-int boardled = D7;
 
-int photoresistor = A0; // This is where your photoresistor is plugged in. 
-												// The other side goes to the "power" pin (below).
+#include <math.h>
 
-int power = A5; // This is the other end of your photoresistor. The other side 
-// is plugged into the "photoresistor" pin (above).
-// The reason we have plugged one side into an analog pin instead of to 
-// "power" is because we want a very steady voltage to be sent to the photoresistor.
-// That way, when we read the value from the other side of the photoresistor,
-// we can accurately calculate a voltage drop.
+double PI = 3.14159265359;
+double a = PI/6;			// 30 degrees = pi/6
 
-double analogvalue; // Here we are declaring the integer variable analogvalue, 
-										// which we will use later to store the value of the photoresistor.
-double setpoint;
-double minim = 40.0;
-double maxim = 300.0;
-double fadeamount = 1.0;
-double brightness = 0.0;
 
-void myHandler(const char *event, const char *data) {
-  String incoming_data = data;
-  int setpoint = incoming_data.toInt();
-  // Serial.print(event);
-  // Serial.print(", data: ");
-  // Serial.println(data);
-  analogWrite(pwm, setpoint);
-  Serial.print(setpoint);
-  // Particle.publish("change_brightness", "testing");
-}
+
+double pre_lat_deg = 37.337652150532776;
+double pre_lng_deg = -122.01422938622564;
+double lat_deg = 37.34138504412391;
+double lng_deg = -122.01425213575031;
+
+double pre_lat = pre_lat_deg*PI/180;
+double pre_lng = pre_lng_deg*PI/180;
+double lat = lat_deg*PI/180;
+double lng = lng_deg*PI/180;
+double d;
+
+
+SYSTEM_MODE(SEMI_AUTOMATIC);
 
 void setup() {
 
-	// First, declare all of our pins. This lets our device know which ones will be 
-	// used for outputting voltage, and which ones will read incoming voltage.
-	pinMode(led,OUTPUT); // Our LED pin is output (lighting up the LED)
-	pinMode(boardled,OUTPUT);		// This is the onboard led
-	pinMode(photoresistor,INPUT);  // Our photoresistor pin is input 
-																 // (reading the photoresistor)
-	pinMode(power,OUTPUT); // The pin powering the photoresistor is output 
-												 // (sending out consistent power)
-	pinMode(pwm, OUTPUT); // Pin for the pwm output
-
-	// Next, write one pin of the photoresistor to be the maximum possible, so that 
-	// we can use this for power.
-	digitalWrite(power,HIGH);
-
-	// We are going to declare a Particle.variable() here so that we can access 
-	// the value of the photoresistor from the cloud.
-	Particle.variable("analogvalue", &analogvalue, DOUBLE);
-	// This is saying that when we ask the cloud for "analogvalue", this will reference 
-	// the variable analogvalue in this app, which is an integer variable.
-
-	// Add brightness as variable to test it out
-	Particle.variable("brightness", &brightness, DOUBLE);
-	Particle.variable("setpoint", &setpoint, DOUBLE);
-
-
-	// We are also going to declare a Particle.function so that we can turn the LED on 
-	// and off from the cloud.
-	Particle.function("led",ledToggle);
-	// This is saying that when we ask the cloud for the function "led", it will employ 
-	//the function ledToggle() from this app.
-
-	// Subscribe to the light_level and point to Handler
-  Mesh.subscribe("low_light", myHandler);
 }
 
 
 // Next is the loop function...
+// (atan2(cos(lat)*sin(lng-pre_lng), cos(pre_lat)*sin(lat) - sin(pre_lat)*cos(lat)*cos(lng-pre_lng)) * 180 / pi() + 360  ) % 360
 
 void loop() {
+	// Capture how long it takes to run
+	unsigned long stop;
+	unsigned long start;
+	start = micros();
 
-	// check to see what the value of the photoresistor is and store it in the int variable analogvalue
-	analogvalue = analogRead(photoresistor);
-	delay(5);
 
-	// // min is 40, max is 340
-	// if (analogvalue > minim && analogvalue < maxim) {
-	// 		setpoint = 255-(analogvalue-minim)/300*255;
-	// } else if (analogvalue <= minim) {
-	// setpoint = 254;
-	// } else if (analogvalue >= maxim) {
-	// 	setpoint = 0;
-	// } else {
-	// 	setpoint = 0;
-	// }
-	// pinMode(pwm, OUTPUT);
+	Serial.println("Answer:");
 
-	// // Check the setpoint vs the brightness
-	// if (brightness < setpoint && brightness < 252) {
-	// 	brightness = brightness + fadeamount;
-	// 	analogWrite(pwm, brightness);
-	// } else if (brightness > setpoint && brightness > 1.3) {
-	// 	brightness = brightness - fadeamount;
-	// 	analogWrite(pwm, brightness);
-	// } else {
-	// 	brightness = brightness;
-	// }
+	d = fmod(atan2(cos(lat)*sin(lng-pre_lng), cos(pre_lat)*sin(lat) - sin(pre_lat)*cos(lat)*cos(lng-pre_lng)) * 180.0/PI + 360.0, 360.0);
+	Serial.println(d,10);
+
+	// Check how long it took
+	Serial.println("Time elapsed:");
+	stop = micros();
+	Serial.println(stop-start);
+
+	delay(5000);
 	
 }
 
 
 // Finally, we will write out our ledToggle function, which is referenced by the Particle.function() called "led"
 
-int ledToggle(String command) {
+int calculator(String command) {
 
-	if (command=="on") {
-		digitalWrite(boardled,HIGH);
-		return 1;
-	}
-	else if (command=="off") {
-		digitalWrite(boardled,LOW);
-		return 0;
-	}
-	else {
-		return -1;
-	}
+	// if (command=="on") {
+	// 	digitalWrite(boardled,HIGH);
+	// 	return 1;
+	// }
+	// else if (command=="off") {
+	// 	digitalWrite(boardled,LOW);
+	// 	return 0;
+	// }
+	// else {
+	// 	return -1;
+	// }
 
 }
